@@ -2,18 +2,18 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import CreateGroupForm from './components/CreateGroupForm';
 import GroupDetails from './components/GroupDetails';
 import GlobalProvider from './GlobalProvider'; 
+import PageAccueil from './components/Accueil';
 
-const App = () => {
+function App() {
   return (
     <Router>
-      <GlobalProvider>
-        <Routes>
-          <Route path="/create-group" element={<CreateGroupForm />} />
-          <Route path="/group-details/:groupId" element={<GroupDetails />} />
-        </Routes>
-      </GlobalProvider>
+      <Routes>
+        <Route path="/" element={<PageAccueil />} />          
+        <Route path="/create-group" element={<CreateGroupForm />} />
+        <Route path="/group-details/:groupId" element={<GroupDetails />} />
+      </Routes>
     </Router>
   );
-};
+}
 
 export default App;
