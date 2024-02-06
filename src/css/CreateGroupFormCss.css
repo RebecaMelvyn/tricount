@@ -19,7 +19,7 @@ button {
   padding: 10px;
 }
   
-#root {
+#container {
   margin: auto;
   display: flex;
 }

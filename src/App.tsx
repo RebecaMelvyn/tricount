@@ -1,7 +1,6 @@
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import CreateGroupForm from './components/CreateGroupForm';
 import GroupDetails from './components/GroupDetails';
-import GlobalProvider from './GlobalProvider'; 
 import PageAccueil from './components/Accueil';
 
 function App() {

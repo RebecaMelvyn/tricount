@@ -27,33 +27,35 @@ const CreateGroupForm: React.FC = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <label>
-        Nom du groupe
-        <input
-          type="text"
-          value={groupName}
-          onChange={handleGroupNameChange}
-        />
-      </label>
-
-      <label>
-        Membres
-        {participants.map((participant, index) => (
+    <div id="container">
+      <form onSubmit={handleSubmit}>
+        <label>
+          Nom du groupe
           <input
-            key={index}
             type="text"
-            value={participant}
-            onChange={(e) => handleParticipantChange(index, e.target.value)}
+            value={groupName}
+            onChange={handleGroupNameChange}
           />
-        ))}
-        <button type="button" onClick={addParticipant}>
-          +
-        </button>
-      </label>
+        </label>
 
-      <button type="submit">Créer le groupe</button>
-    </form>
+        <label>
+          Membres
+          {participants.map((participant, index) => (
+            <input
+              key={index}
+              type="text"
+              value={participant}
+              onChange={(e) => handleParticipantChange(index, e.target.value)}
+            />
+          ))}
+          <button type="button" onClick={addParticipant}>
+            +
+          </button>
+        </label>
+
+        <button type="submit">Créer le groupe</button>
+      </form>
+    </div>
   );
 };
 
