@@ -43,7 +43,8 @@ const GroupDetails: React.FC = () => {
 
   return (
     <div>
-        <h1>Détails du Groupe {group.number}</h1>
+        <h1>Détails du groupe {group.name}</h1>
+        <h3>Numéro du groupe {group.number}</h3>
         <h2>Membres:</h2>
         <ul>
         {group.participants ? group.participants.map((participant, index) => (
