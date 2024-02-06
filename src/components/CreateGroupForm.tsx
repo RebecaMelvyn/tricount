@@ -3,8 +3,7 @@ import '../../src/css/CreateGroupFormCss.css';
 import { openDB } from 'idb';
 import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
-
+import { faArrowLeft, faTimes } from '@fortawesome/free-solid-svg-icons'; // Import de l'icône de croix
 
 interface CreateGroupFormProps {
   redirectToGroupDetails: (groupNumber: string) => void;
@@ -28,6 +27,12 @@ const CreateGroupForm: React.FC<CreateGroupFormProps> = ({ redirectToGroupDetail
     setParticipants([...participants, '']);
   };
 
+  const removeParticipant = (index: number) => {
+    const updatedParticipants = [...participants];
+    updatedParticipants.splice(index, 1);
+    setParticipants(updatedParticipants);
+  };
+
   const generateUniqueGroupNumber = () => {
     const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
     let uniqueGroupNumber = '';
@@ -41,10 +46,6 @@ const CreateGroupForm: React.FC<CreateGroupFormProps> = ({ redirectToGroupDetail
     e.preventDefault();
 
     const groupNumber = generateUniqueGroupNumber(); 
-    // console.log('Numéro de groupe:', groupNumber);
-
-    // console.log('Nom du groupe:', groupName);
-    // console.log('Participants:', participants);
 
     await saveGroupToIndexedDB(groupNumber, groupName, participants);
 
@@ -63,8 +64,6 @@ const CreateGroupForm: React.FC<CreateGroupFormProps> = ({ redirectToGroupDetail
       .put({ number: groupNumber, name: groupName, participants });
   };
   
-  
-
   return (
     <div id="container">
       <Link to="/" id='back'>
@@ -86,12 +85,16 @@ const CreateGroupForm: React.FC<CreateGroupFormProps> = ({ redirectToGroupDetail
         <label>
           Membres
           {participants.map((participant, index) => (
-            <input
-              key={index}
-              type="text"
-              value={participant}
-              onChange={(e) => handleParticipantChange(index, e.target.value)}
-            />
+            <div key={index}>
+              <input
+                type="text"
+                value={participant}
+                onChange={(e) => handleParticipantChange(index, e.target.value)}
+              />
+              <button type="button" onClick={() => removeParticipant(index)}>
+                <FontAwesomeIcon icon={faTimes} />
+              </button>
+            </div>
           ))}
           <button type="button" onClick={addParticipant}>
             +
