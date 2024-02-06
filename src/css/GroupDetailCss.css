@@ -61,3 +61,7 @@ ul li{
 #buttonHidden{
   display: none;
 }
+
+.lineDepense{
+  width: 50vw;
+}

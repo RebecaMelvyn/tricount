@@ -213,9 +213,9 @@ const GroupDetails: React.FC = () => {
         <h2>Dépenses:</h2>
         <button onClick={addExpense}>Ajouter une dépense</button>
 
-        <ul>
+        <ul className='lineDepense'>
           {expenses.map((expense, index) => (
-            <li key={index}>
+            <li  key={index}>
               {expense.payer} a payé {expense.amount}€
               {expense.beneficiaries.length > 0 &&
                 <span>, et {expense.beneficiaries.join(', ')} doivent rembourser {expense.amount / expense.beneficiaries.length}€ à {expense.payer}</span>
