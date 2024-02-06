@@ -4,12 +4,16 @@ import GroupDetails from './components/GroupDetails';
 import PageAccueil from './components/Accueil';
 
 function App() {
+  const redirectToGroupDetails = (groupNumber: string) => {
+    window.location.href = `/group-details/${groupNumber}`;
+  };
+
   return (
     <Router>
       <Routes>
         <Route path="/" element={<PageAccueil />} />          
-        <Route path="/create-group" element={<CreateGroupForm />} />
-        <Route path="/group-details/:groupId" element={<GroupDetails />} />
+        <Route path="/create-group" element={<CreateGroupForm redirectToGroupDetails={redirectToGroupDetails} />} />
+        <Route path="/group-details/:groupNumber" element={<GroupDetails />} />
       </Routes>
     </Router>
   );

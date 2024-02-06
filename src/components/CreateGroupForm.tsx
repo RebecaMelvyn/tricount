@@ -1,7 +1,12 @@
 import React, { useState, FormEvent, ChangeEvent } from 'react';
 import '../../src/css/CreateGroupFormCss.css';
+import { openDB } from 'idb';
 
-const CreateGroupForm: React.FC = () => {
+interface CreateGroupFormProps {
+  redirectToGroupDetails: (groupNumber: string) => void;
+}
+
+const CreateGroupForm: React.FC<CreateGroupFormProps> = ({ redirectToGroupDetails }) => {
   const [groupName, setGroupName] = useState('');
   const [participants, setParticipants] = useState<string[]>(['']);
 
@@ -19,12 +24,42 @@ const CreateGroupForm: React.FC = () => {
     setParticipants([...participants, '']);
   };
 
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+  const generateUniqueGroupNumber = () => {
+    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+    let uniqueGroupNumber = '';
+    for (let i = 0; i < 8; i++) {
+      uniqueGroupNumber += chars.charAt(Math.floor(Math.random() * chars.length));
+    }
+    return uniqueGroupNumber;
+  };
+
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    console.log('Nom du groupe:', groupName);
-    console.log('Participants:', participants);
+    const groupNumber = generateUniqueGroupNumber(); 
+    // console.log('Numéro de groupe:', groupNumber);
+
+    // console.log('Nom du groupe:', groupName);
+    // console.log('Participants:', participants);
+
+    await saveGroupToIndexedDB(groupNumber, groupName, participants);
+
+    redirectToGroupDetails(groupNumber);
   };
+
+  const saveGroupToIndexedDB = async (groupNumber: string, groupName: string, participants: string[]) => {
+    const db = await openDB('groupDB', 1, {
+      upgrade(db) {
+        db.createObjectStore('groups', { keyPath: 'number' });
+      }
+    });
+  
+    await db.transaction('groups', 'readwrite')
+      .objectStore('groups')
+      .put({ number: groupNumber, name: groupName, participants });
+  };
+  
+  
 
   return (
     <div id="container">
