@@ -19,10 +19,6 @@ button {
   padding: 10px;
 }
   
-#container {
-  margin: auto;
-  display: flex;
-}
 
 label{
   display: flex;
