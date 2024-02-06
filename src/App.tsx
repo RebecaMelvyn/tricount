@@ -2,6 +2,7 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import CreateGroupForm from './components/CreateGroupForm';
 import GroupDetails from './components/GroupDetails';
 import PageAccueil from './components/Accueil';
+import JoinGroupForm from './components/JoinGroup';
 
 function App() {
   const redirectToGroupDetails = (groupNumber: string) => {
@@ -13,6 +14,7 @@ function App() {
       <Routes>
         <Route path="/" element={<PageAccueil />} />          
         <Route path="/create-group" element={<CreateGroupForm redirectToGroupDetails={redirectToGroupDetails} />} />
+        <Route path="/join-group" element={<JoinGroupForm />} />
         <Route path="/group-details/:groupNumber" element={<GroupDetails />} />
       </Routes>
     </Router>

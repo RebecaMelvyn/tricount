@@ -1,6 +1,10 @@
 import React, { useState, FormEvent, ChangeEvent } from 'react';
 import '../../src/css/CreateGroupFormCss.css';
 import { openDB } from 'idb';
+import { Link } from 'react-router-dom';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
+
 
 interface CreateGroupFormProps {
   redirectToGroupDetails: (groupNumber: string) => void;
@@ -63,6 +67,12 @@ const CreateGroupForm: React.FC<CreateGroupFormProps> = ({ redirectToGroupDetail
 
   return (
     <div id="container">
+      <Link to="/" id='back'>
+        <button>
+          <FontAwesomeIcon icon={faArrowLeft} />
+        </button>
+      </Link>
+
       <form onSubmit={handleSubmit}>
         <label>
           Nom du groupe
