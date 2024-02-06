@@ -29,3 +29,35 @@
 #members-list {
   flex-direction: row;
 }
+
+ul{
+  width: 20vw;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 0;
+}
+
+ul li{
+  list-style-type: none;
+  border-bottom: 1px solid #000;
+  text-transform: capitalize;
+  margin-top: 3%;
+}
+
+.delParticipant{
+  right: 35%;
+  position: absolute;
+  margin-top: -2%;
+}
+
+.participants{
+  margin-top: 20%;
+}
+
+#addParticipant{
+  display: none;
+}
+
+#buttonHidden{
+  display: none;
+}

@@ -25,3 +25,7 @@ label{
   flex-direction: column;
   text-align: center;
 }
+
+#formCreateGroup{
+  height: 100vh;
+}

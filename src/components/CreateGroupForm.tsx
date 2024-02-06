@@ -72,7 +72,7 @@ const CreateGroupForm: React.FC<CreateGroupFormProps> = ({ redirectToGroupDetail
         </button>
       </Link>
 
-      <form onSubmit={handleSubmit}>
+      <form id='formCreateGroup' onSubmit={handleSubmit}>
         <label>
           Nom du groupe
           <input

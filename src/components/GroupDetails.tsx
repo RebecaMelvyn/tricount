@@ -5,7 +5,6 @@ import '../../src/css/GroupDetailCss.css';
 import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowLeft, faTimes, faPlus } from '@fortawesome/free-solid-svg-icons'; // Import de l'icône de plus
-import '../../src/css/GroupeDetails.css';
 
 
 const saveExpenseToIndexedDB = async (groupNumber: string, newExpense: Expense) => {
@@ -177,7 +176,43 @@ const GroupDetails: React.FC = () => {
         </button>
       </Link>
 
+
+      <h1>Détails du groupe {group.name}</h1>
+      <h3>Numéro du groupe {group.number}</h3>
+      <h2>Membres:         <button type="button" onClick={showAddParticipant}>
+                            <FontAwesomeIcon icon={faPlus} />
+                          </button>
+      </h2>
+      <ul>
+        {group.participants.map((participant, index) => (
+          <li className='participants' key={index}>
+            {participant}
+            <button type="button" className='delParticipant' onClick={() => removeParticipant(index)}>
+              <FontAwesomeIcon icon={faTimes} />
+            </button>
+          </li>
+        ))}
+      </ul>
+
+      <div id='addParticipant'>
+        {/* Champ de saisie pour le nom du nouveau participant */}
+        <input
+          type="text"
+          value={newParticipantName}
+          onChange={(e) => setNewParticipantName(e.target.value)}
+          onKeyDown={handleKeyPress} // Gestion de l'événement "onKeyDown"
+          placeholder="Nom du nouveau participant"
+        />
+        {/* Bouton pour ajouter un participant */}
+      </div>
+        <button id='buttonHidden' type="button" onClick={addParticipant}>
+          <FontAwesomeIcon icon={faPlus} />
+        </button>
+
+
         <h2>Dépenses:</h2>
+        <button onClick={addExpense}>Ajouter une dépense</button>
+
         <ul>
           {expenses.map((expense, index) => (
             <li key={index}>
@@ -189,7 +224,6 @@ const GroupDetails: React.FC = () => {
           ))}
         </ul>
 
-        <button onClick={addExpense}>Ajouter une dépense</button>
 
         {showPopup && (
           <div className="popup-overlay">
@@ -240,37 +274,6 @@ const GroupDetails: React.FC = () => {
             </div>
           </div>
         )}
-      <h1>Détails du groupe {group.name}</h1>
-      <h3>Numéro du groupe {group.number}</h3>
-      <h2>Membres:         <button type="button" onClick={showAddParticipant}>
-                            <FontAwesomeIcon icon={faPlus} />
-                          </button>
-      </h2>
-      <ul>
-        {group.participants.map((participant, index) => (
-          <li className='participants' key={index}>
-            {participant}
-            <button type="button" className='delParticipant' onClick={() => removeParticipant(index)}>
-              <FontAwesomeIcon icon={faTimes} />
-            </button>
-          </li>
-        ))}
-      </ul>
-
-      <div id='addParticipant'>
-        {/* Champ de saisie pour le nom du nouveau participant */}
-        <input
-          type="text"
-          value={newParticipantName}
-          onChange={(e) => setNewParticipantName(e.target.value)}
-          onKeyDown={handleKeyPress} // Gestion de l'événement "onKeyDown"
-          placeholder="Nom du nouveau participant"
-        />
-        {/* Bouton pour ajouter un participant */}
-      </div>
-        <button id='buttonHidden' type="button" onClick={addParticipant}>
-          <FontAwesomeIcon icon={faPlus} />
-        </button>
     </div>
   );
 };
