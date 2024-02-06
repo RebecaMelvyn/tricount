@@ -1,5 +1,8 @@
 import React, { useState, FormEvent, ChangeEvent } from 'react';
 import '../../src/css/CreateGroupFormCss.css';
+import { Link } from 'react-router-dom';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 
 const CreateGroupForm: React.FC = () => {
   const [groupName, setGroupName] = useState('');
@@ -28,6 +31,12 @@ const CreateGroupForm: React.FC = () => {
 
   return (
     <div id="container">
+      <Link to="/" id='back'>
+        <button>
+          <FontAwesomeIcon icon={faArrowLeft} />
+        </button>
+      </Link>
+
       <form onSubmit={handleSubmit}>
         <label>
           Nom du groupe
