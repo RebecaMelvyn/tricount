@@ -3,6 +3,7 @@ import CreateGroupForm from './components/CreateGroupForm';
 import GroupDetails from './components/GroupDetails';
 import PageAccueil from './components/Accueil';
 import JoinGroupForm from './components/JoinGroup';
+import AllGroupsPage from './components/AllGroupsPage';
 
 function App() {
   const redirectToGroupDetails = (groupNumber: string) => {
@@ -12,7 +13,8 @@ function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<PageAccueil />} />          
+        <Route path="/" element={<PageAccueil />}/>          
+        <Route path="/groups" element={<AllGroupsPage />} />          
         <Route path="/create-group" element={<CreateGroupForm redirectToGroupDetails={redirectToGroupDetails} />} />
         <Route path="/join-group" element={<JoinGroupForm />} />
         <Route path="/group-details/:groupNumber" element={<GroupDetails />} />
