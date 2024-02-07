@@ -5,6 +5,7 @@
   color: #000;
   background-color: rgb(189, 224, 255);
   width: 100vw;
+  overflow-y: scroll;
 }
 
 #back{
