@@ -80,6 +80,28 @@ const GroupDetails: React.FC = () => {
     setSelectedPayer(e.target.value);
   };
 
+  const totalExpenses = expenses.reduce((total, expense) => total + expense.amount, 0);
+
+  const expensesPerUser: { [key: string]: number } = {};
+
+  expenses.forEach(expense => {
+    if (expense.payer in expensesPerUser) {
+      expensesPerUser[expense.payer] += expense.amount;
+    } else {
+      expensesPerUser[expense.payer] = expense.amount;
+    }
+
+    expense.beneficiaries.forEach(beneficiary => {
+      if (beneficiary in expensesPerUser) {
+        expensesPerUser[beneficiary] -= expense.amount / (expense.beneficiaries.length );
+      } else {
+        expensesPerUser[beneficiary] = -expense.amount / (expense.beneficiaries.length );
+      }
+    });
+  });
+
+  const totalExpensesPerUser = Object.entries(expensesPerUser);
+
   const handleBeneficiaryChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target;
     setSelectedBeneficiaries(prevState => {
@@ -177,33 +199,35 @@ const GroupDetails: React.FC = () => {
       </Link>
 
 
-      <h1>Détails du groupe {group.name}</h1>
-      <h3>Numéro du groupe {group.number}</h3>
-      <h2>Membres:         <button type="button" onClick={showAddParticipant}>
+  <h1>Détails du groupe {group.name}</h1>
+  <h3>Numéro du groupe {group.number}</h3>
+  <h2>Membres:         <button type="button" onClick={showAddParticipant}>
                             <FontAwesomeIcon icon={faPlus} />
                           </button>
-      </h2>
-      <ul>
-        {group.participants.map((participant, index) => (
-          <li className='participants' key={index}>
-            {participant}
-            <button type="button" className='delParticipant' onClick={() => removeParticipant(index)}>
-              <FontAwesomeIcon icon={faTimes} />
-            </button>
-          </li>
-        ))}
-      </ul>
+  </h2>
+  <div className="participants-card">
+
+  <ul className="participants-list">
+    {group.participants.map((participant, index) => (
+      <li className='participants' key={index}>
+        {participant}
+        <button type="button" className='delParticipant' onClick={() => removeParticipant(index)}>
+          <FontAwesomeIcon icon={faTimes} />
+        </button>
+      </li>
+    ))}
+  </ul>
+</div>
+
 
       <div id='addParticipant'>
-        {/* Champ de saisie pour le nom du nouveau participant */}
         <input
           type="text"
           value={newParticipantName}
           onChange={(e) => setNewParticipantName(e.target.value)}
-          onKeyDown={handleKeyPress} // Gestion de l'événement "onKeyDown"
+          onKeyDown={handleKeyPress} 
           placeholder="Nom du nouveau participant"
         />
-        {/* Bouton pour ajouter un participant */}
       </div>
         <button id='buttonHidden' type="button" onClick={addParticipant}>
           <FontAwesomeIcon icon={faPlus} />
@@ -216,7 +240,7 @@ const GroupDetails: React.FC = () => {
         <ul className='lineDepense'>
           {expenses.map((expense, index) => (
             <li  key={index}>
-              {expense.payer} a payé {expense.amount}€
+              {expense.reason} : {expense.payer} a payé {expense.amount}€
               {expense.beneficiaries.length > 0 &&
                 <span>, et {expense.beneficiaries.join(', ')} doivent rembourser {expense.amount / expense.beneficiaries.length}€ à {expense.payer}</span>
               }
@@ -224,32 +248,39 @@ const GroupDetails: React.FC = () => {
           ))}
         </ul>
 
+        <h2>Total des dépenses pour tout le groupe: {totalExpenses}€</h2>
 
+        <h2>Total des dépenses par utilisateur:</h2>
+        <ul>
+          {totalExpensesPerUser.map(([user, total], index) => (
+            <li key={index}>{user}: {total}€</li>
+          ))}
+        </ul>
+        
         {showPopup && (
           <div className="popup-overlay">
             <div className="popup">
               <span className="close" onClick={() => setShowPopup(false)}>&times;</span>
               <form onSubmit={handleSubmitExpense}>
-                <label>
-                  Montant:
-                  <input
+                <label id='label-popup'>
+                  <input placeholder='Montant'
                     type="number"
                     value={expense}
                     onChange={handleExpenseChange}
+                    required
                   />
                 </label>
-                <label>
-                  Titre :
-                  <input
+                <label id='label-popup'>
+                  <input placeholder='Titre'
                     type="text"
                     value={reason}
                     onChange={handleReasonChange}
+                    required
                   />
                 </label>
-                <label>
-                  Payer par :
-                  <select value={selectedPayer} onChange={handlePayerChange}>
-                    <option value="">Choisir...</option>
+                <label id='label-popup'> 
+                  <select required value={selectedPayer} onChange={handlePayerChange}>
+                    <option value="">Payer par...</option>
                     {group.participants.map((participant, index) => (
                       <option key={index} value={participant}>{participant}</option>
                     ))}
