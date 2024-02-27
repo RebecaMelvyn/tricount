@@ -1,13 +1,15 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
 
+
 #root {
   margin: 0 auto;
   text-align: center;
-  height: 100vh;
+  min-height: 100vh;
+  height: fit-content;
   color: #ffffff;
-  background-image: linear-gradient(135deg, rgb(238, 164, 255) 0%, rgb(160, 15, 188) 100%);
+  background-color: gold;
   width: 100vw;
-  overflow-y: scroll;
+  padding-bottom: 5%;
 }
 
 #back{
@@ -15,8 +17,17 @@
 }
 
 #back button{
+  background-color: rgb(0, 0, 0);
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  transition: all 0.3s;
+  border: none;
+}
+#back button:hover{
   background-color: gold;
   width: 60px;
+  border-radius: 50%;
 }
 
 #contain_home{
@@ -41,28 +52,32 @@
   border-radius: 5px;
   width: 30vw;
   padding-bottom: 6%;
+  margin-bottom: 5%;
+  margin-top: 0!important;
 }
 
 .group_name{
-  background-color: rgb(172, 33, 206);
+  background-color: rgb(0, 0, 0);
   color: #fff;
+  margin: 0;
 }
 
 .all_groups{
-  width: 30vw;
+  width: 95vw;
+  columns: 3;
+  margin-top: 5%;
 }
 
 .link_details{
-  color: gold;
+  transition: all 0.3s;
 }
 
 .link_details:hover{
-  color: rgb(172, 33, 206);
+  color: gold;
 }
 
 header{
-  background-color: #000;
-  padding: 1%;
+  background-color: #ffffff;
 }
 
 header nav{
@@ -84,17 +99,45 @@ header nav ul{
 
 header nav ul h1{
   margin: 0;
+  text-decoration: none;
 }
 
-header nav ul li a{
-  color: #fff;
+header nav ul li{
+  list-style-type: none;
+  text-decoration: none;
+  border-bottom: 1px solid #000;
+  text-transform: capitalize;
+  color: #000000;
+  margin-top: 5%;
+  height: 50%;
+  transition: all 0.3s;
+}
+header nav ul li:hover{
+  border-bottom: 1px solid gold;
+  cursor: pointer;
+}
+header nav ul li:hover > a{
+  color: gold!important;
+}
+
+header nav ul h1 a, header nav ul li a{
+  color: #000000;
   transition: all 0.3s;
 }
 
-header nav ul li a:hover{
+header nav ul h1 a:hover{
   color: gold;
 }
 
 .container_back{
   text-align: left;
+}
+
+.delGroup{
+  background-color: rgb(236, 37, 37);
+
+}
+
+.btn{
+  background-color: #000;
 }
