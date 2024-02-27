@@ -12,13 +12,10 @@
 
 #back{
   display: block;
-  left: 5%;
-  top: 5%;
-  position: absolute;
 }
 
 #back button{
-  background-color: crimson;
+  background-color: gold;
   width: 60px;
 }
 
@@ -27,3 +24,77 @@
   padding-right: 5%;
 }
 
+#contain_home p{
+  padding-left: 20%;
+  padding-right: 20%;
+  margin-top: 5%;
+  margin-bottom: 5%;
+}
+
+#contain_home h2{
+  margin-top: 10%;
+}
+
+.groups{
+  background-color: #ffffff;
+  color: #000;
+  border-radius: 5px;
+  width: 30vw;
+  padding-bottom: 6%;
+}
+
+.group_name{
+  background-color: rgb(172, 33, 206);
+  color: #fff;
+}
+
+.all_groups{
+  width: 30vw;
+}
+
+.link_details{
+  color: gold;
+}
+
+.link_details:hover{
+  color: rgb(172, 33, 206);
+}
+
+header{
+  background-color: #000;
+  padding: 1%;
+}
+
+header nav{
+  display: flex;
+}
+
+.nav_link{
+  display: flex;
+  padding-top: 0%;
+}
+
+.second_link{
+  margin-left: 15%;
+}
+
+header nav ul{
+  width: 25vw;
+}
+
+header nav ul h1{
+  margin: 0;
+}
+
+header nav ul li a{
+  color: #fff;
+  transition: all 0.3s;
+}
+
+header nav ul li a:hover{
+  color: gold;
+}
+
+.container_back{
+  text-align: left;
+}

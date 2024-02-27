@@ -1,9 +1,9 @@
 import React, { useState, FormEvent, ChangeEvent } from 'react';
 import '../../src/css/CreateGroupFormCss.css';
 import { openDB } from 'idb';
-import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faArrowLeft, faTimes } from '@fortawesome/free-solid-svg-icons'; // Import de l'icône de croix
+import { faTimes } from '@fortawesome/free-solid-svg-icons'; // Import de l'icône de croix
+import Header from './Header';
 
 interface CreateGroupFormProps {
   redirectToGroupDetails: (groupNumber: string) => void;
@@ -65,44 +65,42 @@ const CreateGroupForm: React.FC<CreateGroupFormProps> = ({ redirectToGroupDetail
   };
   
   return (
-    <div id="container">
-      <Link to="/" id='back'>
-        <button>
-          <FontAwesomeIcon icon={faArrowLeft} />
-        </button>
-      </Link>
+    <div>
+      <Header/>
+      <div id="container">
 
-      <form id='formCreateGroup' onSubmit={handleSubmit}>
-        <label>
-          Nom du groupe
-          <input
-            type="text"
-            value={groupName}
-            onChange={handleGroupNameChange}
-          />
-        </label>
+        <form id='formCreateGroup' onSubmit={handleSubmit}>
+          <label>
+            Nom du groupe
+            <input
+              type="text"
+              value={groupName}
+              onChange={handleGroupNameChange}
+            />
+          </label>
 
-        <label>
-          Membres
-          {participants.map((participant, index) => (
-            <div key={index}>
-              <input
-                type="text"
-                value={participant}
-                onChange={(e) => handleParticipantChange(index, e.target.value)}
-              />
-              <button type="button" onClick={() => removeParticipant(index)}>
-                <FontAwesomeIcon icon={faTimes} />
-              </button>
-            </div>
-          ))}
-          <button type="button" onClick={addParticipant}>
-            +
-          </button>
-        </label>
+          <label>
+            Membres
+            {participants.map((participant, index) => (
+              <div key={index}>
+                <input
+                  type="text"
+                  value={participant}
+                  onChange={(e) => handleParticipantChange(index, e.target.value)}
+                />
+                <button type="button" onClick={() => removeParticipant(index)}>
+                  <FontAwesomeIcon icon={faTimes} />
+                </button>
+              </div>
+            ))}
+            <button type="button" onClick={addParticipant}>
+              +
+            </button>
+          </label>
 
-        <button type="submit">Créer le groupe</button>
-      </form>
+          <button type="submit">Créer le groupe</button>
+        </form>
+      </div>
     </div>
   );
 };

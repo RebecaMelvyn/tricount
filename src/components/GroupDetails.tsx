@@ -2,9 +2,9 @@ import React, { useState, useEffect, ChangeEvent, FormEvent } from 'react';
 import { useParams } from 'react-router-dom';
 import { openDB } from 'idb';
 import '../../src/css/GroupDetailCss.css';
-import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faArrowLeft, faTimes, faPlus } from '@fortawesome/free-solid-svg-icons'; // Import de l'icône de plus
+import { faTimes, faPlus } from '@fortawesome/free-solid-svg-icons'; // Import de l'icône de plus
+import Header from './Header';
 
 
 const saveExpenseToIndexedDB = async (groupNumber: string, newExpense: Expense) => {
@@ -192,12 +192,7 @@ const GroupDetails: React.FC = () => {
 
   return (
     <div>
-      <Link to="/" id='back'>
-        <button>
-          <FontAwesomeIcon icon={faArrowLeft} />
-        </button>
-      </Link>
-
+      <Header/>
 
   <h1>Détails du groupe {group.name}</h1>
   <h3>Numéro du groupe {group.number}</h3>
@@ -210,10 +205,12 @@ const GroupDetails: React.FC = () => {
   <ul className="participants-list">
     {group.participants.map((participant, index) => (
       <li className='participants' key={index}>
-        {participant}
-        <button type="button" className='delParticipant' onClick={() => removeParticipant(index)}>
-          <FontAwesomeIcon icon={faTimes} />
-        </button>
+        <div>
+          {participant}
+          <button type="button" className='delParticipant' onClick={() => removeParticipant(index)}>
+            <FontAwesomeIcon icon={faTimes} />
+          </button>
+        </div>
       </li>
     ))}
   </ul>

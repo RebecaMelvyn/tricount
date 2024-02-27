@@ -27,5 +27,16 @@ label{
 }
 
 #formCreateGroup{
-  height: 100vh;
+  background-color: rgb(255, 255, 255);
+  border-radius: 5px;
+  
+  padding: 2%;
+}
+
+#container{
+  margin-top: 5%;
+  width: 40vw;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
 }

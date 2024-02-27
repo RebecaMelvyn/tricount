@@ -1,8 +1,6 @@
 import React, { useState, FormEvent, ChangeEvent } from 'react';
 import '../../src/css/CreateGroupFormCss.css';
-import { Link } from 'react-router-dom';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
+import Header from './Header';
 
 const JoinGroupForm: React.FC = () => {
   const [groupCode, setGroupCode] = useState('');
@@ -18,11 +16,7 @@ const JoinGroupForm: React.FC = () => {
 
   return (
     <div id="container">
-      <Link to="/" id='back'>
-        <button>
-          <FontAwesomeIcon icon={faArrowLeft} />
-        </button>
-      </Link>
+      <Header/>
 
       <form onSubmit={handleSubmit}>
         <label>

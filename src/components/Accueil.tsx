@@ -1,27 +1,28 @@
 import '../App.css'
 import { Link } from 'react-router-dom';
+import Header from './Header';
 
 
 function PageAccueil() {
 
   return (
     <>
-      <div id='contain_home'>
-        <h1>Tricount</h1>
+      <div>
+        <Header/>
+        <div id='contain_home'>
 
-        <Link to="/groups">
-          <button>Voir mes groupes</button>
-        </Link>
+          <h2>Offrez-vous ce qu'il y a de mieux en matière de partage entre amies ou collègues</h2>
 
-        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Accusamus id quasi nostrum, expedita ut, ea neque cum voluptas labore accusantium soluta tempore nihil, asperiores ab placeat alias numquam corporis doloribus? Lorem ipsum dolor sit, amet consectetur adipisicing elit. Velit dolorum sapiente officia omnis rem quo aperiam aspernatur at ex a consequuntur consequatur odit, veritatis et, iure quod placeat repellat eos!</p>
+          <p>L'application Trimelcas offre une solution pratique et conviviale pour gérer les dépenses partagées au sein de groupes, facilitant ainsi la coordination et l'organisation des activités collectives.</p>
 
-        <Link to="/create-group">
-          <button>Créer un groupe</button>
-        </Link>
-        <h4>OU</h4>
-        <Link to="/join-group">
-          <button>Rejoindre un groupe</button>
-        </Link>
+          <Link to="/create-group">
+            <button>Créer un groupe</button>
+          </Link>
+          <h4>OU</h4>
+          <Link to="/join-group">
+            <button>Rejoindre un groupe</button>
+          </Link>
+        </div>
       </div>
 
     </>

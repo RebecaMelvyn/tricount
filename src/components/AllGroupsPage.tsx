@@ -2,8 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { openDB } from 'idb';
 import { Link } from 'react-router-dom';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
+import Header from './Header';
 
 interface Group {
   number: string;
@@ -51,21 +50,19 @@ const AllGroupsPage: React.FC = () => {
 
   return (
     <div>
-       <Link to="/" id='back'>
-        <button>
-          <FontAwesomeIcon icon={faArrowLeft} />
-        </button>
-      </Link>
+        <Header/>
 
       <h1>Tous les groupes</h1>
-      <ul>
+      <ul className='all_groups'>
         {groups.map(group => (
-          <li key={group.number}>
+          <li className='groups' key={group.number}>
+            <p className='group_name'>Groupe <b>{group.name}</b></p>
             <p>Numéro: {group.number}</p>
-            <p>Nom: {group.name}</p>
             <p>Participants: {group.participants.join(', ')}</p>
+            <Link className='link_details' to={`/group-details/${group.number}`}>Détail du groupe</Link>
+            <br />
+            <br />
             <button onClick={() => handleLeaveGroup(group.number)}>Supprimer le groupe</button>
-            <Link to={`/group-details/${group.number}`}>Détail du groupe</Link>
           </li>
         ))}
       </ul>
