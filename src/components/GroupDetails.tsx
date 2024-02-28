@@ -317,12 +317,12 @@ const GroupDetails: React.FC = () => {
               {expense.beneficiaries.length > 0 && (
                 <span>, et {expense.beneficiaries.join(', ')} doivent rembourser {expense.amount / expense.beneficiaries.length}€ à {expense.payer}</span>
               )}
-              <button onClick={() => removeExpense(index)}>
-                <FontAwesomeIcon icon={faTimes} />  
-              </button>
-              <button onClick={() => editExpense(index)}>
+              <button className='editExpense' onClick={() => editExpense(index)}>
                 <FontAwesomeIcon icon={faEdit} />
               </button> 
+              <button className='delExpense' onClick={() => removeExpense(index)}>
+                <FontAwesomeIcon icon={faTimes} />  
+              </button>
               </li>
             ))}
           </ul>

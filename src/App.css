@@ -52,7 +52,6 @@
   border-radius: 5px;
   width: 30vw;
   padding-bottom: 6%;
-  margin-bottom: 5%;
   margin-top: 0!important;
 }
 
@@ -64,7 +63,10 @@
 
 .all_groups{
   width: 95vw;
-  columns: 3;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  list-style: none; 
   margin-top: 5%;
 }
 
@@ -94,7 +96,7 @@ header nav{
 }
 
 header nav ul{
-  width: 25vw;
+  width: 30vw;
 }
 
 header nav ul h1{
@@ -127,10 +129,6 @@ header nav ul h1 a, header nav ul li a{
 
 header nav ul h1 a:hover{
   color: gold;
-}
-
-.container_back{
-  width: 2vw;
 }
 
 .delGroup{

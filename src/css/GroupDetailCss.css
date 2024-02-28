@@ -152,6 +152,14 @@ button:hover{
   margin-left: 5%;
 }
 
+.delExpense{
+  background-color: rgb(236, 37, 37);
+}
+
+.editExpense, .delExpense{
+  margin-left: 5%;
+}
+
 
 @media only screen and (max-width: 768px) {
   #contain_col{
