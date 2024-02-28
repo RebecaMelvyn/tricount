@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom';
 import { openDB } from 'idb';
 import '../../src/css/GroupDetailCss.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTimes, faPlus, faEdit } from '@fortawesome/free-solid-svg-icons'; 
+import { faTimes, faPlus, faEye, faEdit } from '@fortawesome/free-solid-svg-icons';
 import Header from './Header';
 
 
@@ -219,6 +219,28 @@ const GroupDetails: React.FC = () => {
     }
   };
 
+  const showParticipants = () => {
+    const participantCard = document.getElementById("participants-card");
+    const col = document.getElementById("col-1");
+    
+    if(participantCard && col){
+
+      if(!window.matchMedia('(max-width: 768px)').matches){
+        
+        if(participantCard.classList.contains("scaleNone")){
+          col.style.height = "max-content";
+          participantCard.classList.remove("scaleNone");
+          
+        }else{          
+          col.style.height = "150%";
+          participantCard.classList.add("scaleNone");
+          
+        }
+      }
+    }
+  }
+
+
   const handleKeyPress = (event: React.KeyboardEvent<HTMLInputElement>) => {
     
     if (event.key === 'Enter') {
@@ -239,120 +261,133 @@ const GroupDetails: React.FC = () => {
     <div>
       <Header/>
 
-  <h1>Détails du groupe {group.name}</h1>
-  <h3>Numéro du groupe {group.number}</h3>
-  <h2>Membres:         <button type="button" onClick={showAddParticipant}>
-                            <FontAwesomeIcon icon={faPlus} />
-                          </button>
-  </h2>
-  <div className="participants-card">
+      <h1>Détails du groupe {group.name}</h1>
+      <h3>Numéro du groupe {group.number}</h3>
 
-  <ul className="participants-list">
-    {group.participants.map((participant, index) => (
-      <li className='participants' key={index}>
-        <div>
-          {participant}
-          <button type="button" className='delParticipant' onClick={() => removeParticipant(index)}>
-            <FontAwesomeIcon icon={faTimes} />
-          </button>
-        </div>
-      </li>
-    ))}
-  </ul>
-</div>
+      <div id='contain_col'>
 
-
-      <div id='addParticipant'>
-        <input
-          type="text"
-          value={newParticipantName}
-          onChange={(e) => setNewParticipantName(e.target.value)}
-          onKeyDown={handleKeyPress} 
-          placeholder="Nom du nouveau participant"
-        />
-      </div>
-        <button id='buttonHidden' type="button" onClick={addParticipant}>
-          <FontAwesomeIcon icon={faPlus} />
-        </button>
-
-
-        <h2>Dépenses:</h2>
-        <button onClick={addExpense}>Ajouter une dépense</button>
-
-        <ul className='lineDepense'>
-          {expenses.map((expense, index) => (
-            <li  key={index}>
-             {expense.reason} : {expense.payer} a payé {expense.amount}€
-            {expense.beneficiaries.length > 0 && (
-              <span>, et {expense.beneficiaries.join(', ')} doivent rembourser {expense.amount / expense.beneficiaries.length}€ à {expense.payer}</span>
-            )}
-            <button onClick={() => removeExpense(index)}>
-              <FontAwesomeIcon icon={faTimes} />  
+        <div id='col-1'>
+          <h2>Membres :          
+            <button type="button" id='showParticipants' onClick={showParticipants}>
+              <FontAwesomeIcon icon={faEye} />
             </button>
-            <button onClick={() => editExpense(index)}>
-              <FontAwesomeIcon icon={faEdit} />
-            </button> 
-            </li>
-          ))}
-        </ul>
-
-        <h2>Total des dépenses pour tout le groupe: {totalExpenses}€</h2>
-
-        <h2>Total des dépenses par utilisateur:</h2>
-        <ul>
-          {totalExpensesPerUser.map(([user, total], index) => (
-            <li key={index}>{user}: {total}€</li>
-          ))}
-        </ul>
-        
-        {showPopup && (
-          <div className="popup-overlay">
-            <div className="popup">
-              <span className="close" onClick={() => setShowPopup(false)}>&times;</span>
-              <form onSubmit={handleSubmitExpense}>
-                <label id='label-popup'>
-                  <input placeholder='Montant'
-                    type="number"
-                    value={expense}
-                    onChange={handleExpenseChange}
-                    required
-                  />
-                </label>
-                <label id='label-popup'>
-                  <input placeholder='Titre'
-                    type="text"
-                    value={reason}
-                    onChange={handleReasonChange}
-                    required
-                  />
-                </label>
-                <label id='label-popup'> 
-                  <select required value={selectedPayer} onChange={handlePayerChange}>
-                    <option value="">Payer par...</option>
-                    {group.participants.map((participant, index) => (
-                      <option key={index} value={participant}>{participant}</option>
-                    ))}
-                  </select>
-                </label>
-                <label>
-                  Pour qui :
-                  {group.participants.map((participant, index) => (
-                    <label id='members-list' key={index}>
-                      <input
-                        type="checkbox"
-                        value={participant}
-                        checked={selectedBeneficiaries.includes(participant)}
-                        onChange={handleBeneficiaryChange}
-                      />
-                      {participant}
-                    </label>
-                  ))}
-                </label>
-                <button type="submit">Ajouter</button>
-              </form>
-            </div>
+          </h2>
+          <div id="participants-card" className='scaleNone'>
+          <button type="button" onClick={showAddParticipant}>
+            <FontAwesomeIcon icon={faPlus} />
+          </button>
+            <ul className="participants-list">
+              {group.participants.map((participant, index) => (
+                <li className='participants' key={index}>
+                  <div>
+                    {participant}
+                    <button type="button" className='delParticipant' onClick={() => removeParticipant(index)}>
+                      <FontAwesomeIcon icon={faTimes} />
+                    </button>
+                  </div>
+                </li>
+              ))}
+            </ul>
           </div>
-        )}
+
+          <div id='addParticipant'>
+            <input
+              type="text"
+              value={newParticipantName}
+              onChange={(e) => setNewParticipantName(e.target.value)}
+              onKeyDown={handleKeyPress} 
+              placeholder="Nom du nouveau participant"
+            />
+          </div>
+          <button id='buttonHidden' type="button" onClick={addParticipant}>
+            <FontAwesomeIcon icon={faPlus} />
+          </button>
+
+        </div>
+
+        <div id='col-2'>
+
+          <h2>Dépenses:</h2>
+          <button onClick={addExpense}>Ajouter une dépense</button>
+
+          <ul className='lineDepense'>
+            {expenses.map((expense, index) => (
+              <li  key={index}>
+               {expense.reason} : {expense.payer} a payé {expense.amount}€
+              {expense.beneficiaries.length > 0 && (
+                <span>, et {expense.beneficiaries.join(', ')} doivent rembourser {expense.amount / expense.beneficiaries.length}€ à {expense.payer}</span>
+              )}
+              <button onClick={() => removeExpense(index)}>
+                <FontAwesomeIcon icon={faTimes} />  
+              </button>
+              <button onClick={() => editExpense(index)}>
+                <FontAwesomeIcon icon={faEdit} />
+              </button> 
+              </li>
+            ))}
+          </ul>
+
+          <h2>Total des dépenses pour tout le groupe: {totalExpenses}€</h2>
+
+          <h2>Total des dépenses par utilisateur:</h2>
+          <ul>
+            {totalExpensesPerUser.map(([user, total], index) => (
+              <li key={index}>{user}: {total}€</li>
+            ))}
+          </ul>
+          
+          {showPopup && (
+            <div className="popup-overlay">
+              <div className="popup">
+                <span className="close" onClick={() => setShowPopup(false)}>&times;</span>
+                <form onSubmit={handleSubmitExpense}>
+                  <label id='label-popup'>
+                    <input placeholder='Montant'
+                      type="number"
+                      value={expense}
+                      onChange={handleExpenseChange}
+                      required
+                    />
+                  </label>
+                  <label id='label-popup'>
+                    <input placeholder='Titre'
+                      type="text"
+                      value={reason}
+                      onChange={handleReasonChange}
+                      required
+                    />
+                  </label>
+                  <label id='label-popup'> 
+                    <select required value={selectedPayer} onChange={handlePayerChange}>
+                      <option value="">Payer par...</option>
+                      {group.participants.map((participant, index) => (
+                        <option key={index} value={participant}>{participant}</option>
+                      ))}
+                    </select>
+                  </label>
+                  <label>
+                    Pour qui :
+                    {group.participants.map((participant, index) => (
+                      <label id='members-list' key={index}>
+                        <input
+                          type="checkbox"
+                          value={participant}
+                          checked={selectedBeneficiaries.includes(participant)}
+                          onChange={handleBeneficiaryChange}
+                        />
+                        {participant}
+                      </label>
+                    ))}
+                  </label>
+                  <button type="submit">Ajouter</button>
+                </form>
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+        
+
     </div>
   );
 };
