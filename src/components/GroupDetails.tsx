@@ -5,6 +5,8 @@ import '../../src/css/GroupDetailCss.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTimes, faPlus } from '@fortawesome/free-solid-svg-icons'; // Import de l'icône de plus
 import Header from './Header';
+// import { notificationsService } from '../hooks/notificationsService';
+// import * as PusherPushNotifications from '@pusher/push-notifications-web';
 
 
 const saveExpenseToIndexedDB = async (groupNumber: string, newExpense: Expense) => {
@@ -54,6 +56,7 @@ const GroupDetails: React.FC = () => {
   const [description, setDescription] = useState<string>('');
   const [expenses, setExpenses] = useState<Expense[]>([]);
   const [newParticipantName, setNewParticipantName] = useState('');
+  // const [beamsClient, setBeamsClient] = useState<PusherPushNotifications.Client | null>(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -70,6 +73,24 @@ const GroupDetails: React.FC = () => {
     };
 
     fetchData();
+    // const initializePusherClient = async () => {
+    //   try {
+    //     const client = await notificationsService();
+    //     if (client instanceof PusherPushNotifications.Client) {
+    //       setBeamsClient(client);
+    //       if (client) {
+    //         await client.addDeviceInterest('group_created');
+    //         console.log('Interest added for group_created');
+    //       }
+    //     } else {
+    //       console.error('Error: Expected PusherPushNotifications.Client');
+    //     }
+    //   } catch (error) {
+    //     console.error('Error initializing Pusher client:', error);
+    //   }
+    // };
+
+    // initializePusherClient();
   }, [groupNumber]);
 
   const handleExpenseChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -135,6 +156,26 @@ const GroupDetails: React.FC = () => {
     const amountPerBeneficiary = expense / isPayerIncluded;
     setExpenses(prevExpenses => [...prevExpenses, newExpense]);
     await saveExpenseToIndexedDB(groupNumber!, newExpense);
+
+    // if (beamsClient) {
+    //   try {
+    //     await beamsClient.publishToInterests(['group_created'], {
+    //       web: {
+    //         notification: {
+    //           title: 'Nouveau groupe créé',
+    //           body: `Le groupe ${group?.name} a été créé avec succès!`
+    //         }
+    //       }
+    //     });
+    //     console.log('Notification envoyée pour le nouveau groupe');
+    //   } catch (error) {
+    //     console.error('Error sending notification:', error);
+    //   }
+    // }
+    
+    
+  
+
     console.log('Montant à rembourser par bénéficiaire:', amountPerBeneficiary);
 
     setExpense(0);
