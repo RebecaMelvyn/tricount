@@ -180,17 +180,21 @@ const GroupDetails: React.FC = () => {
     
     if(participantCard && col){
 
-      if(participantCard.classList.contains("scaleNone")){
-        col.style.height = "max-content";
-        participantCard.classList.remove("scaleNone");
-
-      }else{
-        col.style.height = "150%";
-        participantCard.classList.add("scaleNone");
-
+      if(!window.matchMedia('(max-width: 768px)').matches){
+        
+        if(participantCard.classList.contains("scaleNone")){
+          col.style.height = "max-content";
+          participantCard.classList.remove("scaleNone");
+          
+        }else{          
+          col.style.height = "150%";
+          participantCard.classList.add("scaleNone");
+          
+        }
       }
     }
   }
+
 
   const handleKeyPress = (event: React.KeyboardEvent<HTMLInputElement>) => {
     

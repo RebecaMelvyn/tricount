@@ -130,7 +130,7 @@ header nav ul h1 a:hover{
 }
 
 .container_back{
-  text-align: left;
+  width: 2vw;
 }
 
 .delGroup{
@@ -140,4 +140,78 @@ header nav ul h1 a:hover{
 
 .btn{
   background-color: #000;
+}
+
+
+
+@media only screen and (max-width: 768px) {
+
+  .container_back{
+    width: 10vw;
+  }
+
+  header nav ul h1{
+    font-size: 33px;
+    margin-top: 5%;
+  }
+
+  header nav ul li a{
+    font-size: 11px;
+  }
+
+  header nav ul li{
+    border: none;
+  }
+
+  #back button{
+    width: 40px;
+    height: 40px;
+  }
+
+  .second_link{
+    line-height: 1;
+  }
+
+  #contain_home p {
+    padding-left: 10%;
+    padding-right: 10%;
+    margin-top: 15%;
+    margin-bottom: 30%;
+  }
+
+  #contain_home h2 {
+    margin-top: 15%;
+  }
+
+  #container{
+    width: 70vw;
+    margin-top: 15%;
+    border-radius: 15px;
+  }
+
+  #formCreateGroup {
+    height: 40vh;
+    border-radius: 15px;
+  }
+
+  #formCreateGroup:nth-child(2){
+    margin-top: 5%;
+  }
+
+  .btn_submit{
+    margin-top: 15%;
+  }
+
+  .all_groups {
+    width: 90vw;
+    margin-top: 15%;
+    justify-content: center;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .groups{
+    width: 90vw;
+    border-radius: 15px;
+  }
 }

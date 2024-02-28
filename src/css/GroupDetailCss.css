@@ -152,3 +152,57 @@ button:hover{
   margin-left: 5%;
 }
 
+
+@media only screen and (max-width: 768px) {
+  #contain_col{
+    position: static;
+    columns: 1;
+  }
+  
+  #col-1, #col-2{
+    position: static;
+    width: 100%;
+  }
+
+  #col-1 {
+    height: max-content;
+    padding-top: 1px;
+    padding-bottom: 10px;
+  }
+
+  #col-2{
+    padding-left: 5%;
+    padding-right: 5%;
+    padding-bottom: 5%;
+    width: 90%;
+  }
+
+  #col-2 ul{
+    width: 40vw;
+  }
+
+  .scaleNone{
+    scale: 1!important;
+  }
+  
+  #col-2 ul li{
+    margin-bottom: 10%;
+  }
+
+  #showParticipants{
+    display: none;
+  }
+
+  .participants {
+    margin-top: 30%;
+    margin-bottom: 40%;
+  }
+
+  .lineDepense {
+    width: 80vw;
+  }
+
+  .popup{
+    width: 50%;
+  }
+}
