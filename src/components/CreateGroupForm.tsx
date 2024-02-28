@@ -88,7 +88,7 @@ const CreateGroupForm: React.FC<CreateGroupFormProps> = ({ redirectToGroupDetail
                   value={participant}
                   onChange={(e) => handleParticipantChange(index, e.target.value)}
                 />
-                <button type="button" onClick={() => removeParticipant(index)}>
+                <button className='btn_delParticipant' type="button" onClick={() => removeParticipant(index)}>
                   <FontAwesomeIcon icon={faTimes} />
                 </button>
               </div>
@@ -98,7 +98,7 @@ const CreateGroupForm: React.FC<CreateGroupFormProps> = ({ redirectToGroupDetail
             </button>
           </label>
 
-          <button type="submit">Créer le groupe</button>
+          <button  className='btn_submit' type="submit">Créer le groupe</button>
         </form>
       </div>
     </div>

@@ -67,7 +67,7 @@ ul li{
 }
 
 .lineDepense{
-  width: 50vw;
+  width: 30vw;
 }
 
 label {
@@ -78,15 +78,23 @@ label {
 #label-popup{
   width: 100%;
 }
-.participants-card {
+
+.scaleNone{
+  scale: 0!important;
+}
+
+#participants-card {
   background-color: #f0f0f0;
   padding: 20px;
   border-radius: 8px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  width: 35%;
+  width: 60%;
   color: black;
   margin: auto;
   margin-bottom: 20px; 
+  transition: all 0.3s;
+  scale: 1;
+
 }
 
 .participants-list {
@@ -94,5 +102,107 @@ label {
   padding: 0;
 }
 
+#contain_col{
+  position: relative;
+  columns: 2;
+  margin-top: 5%;
+  height: 100%;
+  padding: 3%;
+}
+
+#col-1, #col-2{
+  height: max-content;
+  border-radius: 15px;
+  width: 45%;
+  position: absolute;
+  top: 0;
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+  background-color: #5db1be;
+}
+
+#col-1{
+  left: 30px;
+  height: 150%;
+  transition: all 0.2s;
+}
+
+#col-2{
+  right: 30px;
+}
+
+button{
+  background-color: gold;
+  box-shadow: rgba(67, 71, 85, 0.27) 0px 0px 0.25em, rgba(90, 125, 188, 0.05) 0px 0.25em 1em;
+  transition: all 0.3s;
+}
+
+button:hover{
+  border: none;
+  box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
+}
+
+.delParticipant{
+  background-color: rgb(236, 37, 37);
+  height: 35px;
+  padding: 5px;
+  margin-top: -5%;
+}
+
+#showParticipants{
+  margin-left: 5%;
+}
 
 
+@media only screen and (max-width: 768px) {
+  #contain_col{
+    position: static;
+    columns: 1;
+  }
+  
+  #col-1, #col-2{
+    position: static;
+    width: 100%;
+  }
+
+  #col-1 {
+    height: max-content;
+    padding-top: 1px;
+    padding-bottom: 10px;
+  }
+
+  #col-2{
+    padding-left: 5%;
+    padding-right: 5%;
+    padding-bottom: 5%;
+    width: 90%;
+  }
+
+  #col-2 ul{
+    width: 40vw;
+  }
+
+  .scaleNone{
+    scale: 1!important;
+  }
+  
+  #col-2 ul li{
+    margin-bottom: 10%;
+  }
+
+  #showParticipants{
+    display: none;
+  }
+
+  .participants {
+    margin-top: 30%;
+    margin-bottom: 40%;
+  }
+
+  .lineDepense {
+    width: 80vw;
+  }
+
+  .popup{
+    width: 50%;
+  }
+}
