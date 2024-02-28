@@ -1,9 +1,21 @@
 import '../App.css'
 import { Link } from 'react-router-dom';
 import Header from './Header';
+import * as PusherPushNotifications from '@pusher/push-notifications-web';
+import { useEffect } from 'react';
 
 
 function PageAccueil() {
+  useEffect(() => {
+    const beamsClient = new PusherPushNotifications.Client({
+      instanceId: '6a245bed-351e-4dce-aef2-8d49b0df3ec3',
+    });
+
+    beamsClient.start()
+      .then(() => beamsClient.addDeviceInterest('hello'))
+      .then(() => console.log('Successfully registered and subscribed!'))
+      .catch(console.error);
+  }, []); 
 
   return (
     <>
@@ -28,5 +40,6 @@ function PageAccueil() {
     </>
   )
 }
+<script src="https://js.pusher.com/beams/1.0/push-notifications-cdn.js"></script>
 
 export default PageAccueil
