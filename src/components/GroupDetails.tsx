@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom';
 import { openDB } from 'idb';
 import '../../src/css/GroupDetailCss.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTimes, faPlus } from '@fortawesome/free-solid-svg-icons';
+import { faTimes, faPlus } from '@fortawesome/free-solid-svg-icons'; 
 import Header from './Header';
 
 const saveExpenseToIndexedDB = async (groupNumber: string, newExpense: Expense) => {
@@ -23,20 +23,6 @@ const saveExpenseToIndexedDB = async (groupNumber: string, newExpense: Expense) 
 
         await tx.done;
         console.log('Dépense enregistrée avec succès dans IndexedDB.');
-        
-        if ('serviceWorker' in navigator) {
-          navigator.serviceWorker.ready.then(function (registration) {
-            registration.showNotification('Form Submitted', {
-              body: 'Your form has been successfully submitted!',
-              icon: '/path/to/icon.png',
-              badge: '/path/to/badge.png',
-              data: {
-                url: window.location.href,
-              },
-            });
-          });
-        }
-        
     } catch (error) {
         console.error('Erreur lors de l\'enregistrement de la dépense dans IndexedDB:', error);
     }
@@ -85,33 +71,7 @@ const GroupDetails: React.FC = () => {
   const [description, setDescription] = useState<string>('');
   const [expenses, setExpenses] = useState<Expense[]>([]);
   const [newParticipantName, setNewParticipantName] = useState('');
-  
-  const deleteExpenseFromIndexedDB = async (groupNumber: string, expenses: Expense[]) => {
-    try {
-      const db = await openDB('groupDB', 1);
-      const tx = db.transaction('groups', 'readwrite');
-      const store = tx.objectStore('groups');
-  
-      const group = await store.get(groupNumber);
-      if (group) {
-        group.expenses = expenses;
-        await store.put(group); 
-      }
-  
-      await tx.done;
-      console.log('Dépense supprimée avec succès de IndexedDB.');
-    } catch (error) {
-      console.error('Erreur lors de la suppression de la dépense de IndexedDB:', error);
-    }
-  };
 
-  const removeExpense = async (index: number) => {
-    const updatedExpenses = [...expenses];
-    updatedExpenses.splice(index, 1);
-    setExpenses(updatedExpenses);
-    await deleteExpenseFromIndexedDB(groupNumber!, updatedExpenses); 
-  };
-  
   useEffect(() => {
     const fetchData = async () => {
       if (!groupNumber) return; 
@@ -128,25 +88,6 @@ const GroupDetails: React.FC = () => {
 
     fetchData();
   }, [groupNumber]);
-
-  const editExpense = async (index: number) => {
-    const editedExpense = expenses[index]; 
-
-    setExpense(editedExpense.amount);
-    setSelectedPayer(editedExpense.payer);
-    setSelectedBeneficiaries(editedExpense.beneficiaries);
-    setReason(editedExpense.reason);
-    setDescription(editedExpense.description);
-    
-    setShowPopup(true);
-  
-    const updatedExpenses = [...expenses];
-    updatedExpenses.splice(index, 1);
-    setExpenses(updatedExpenses);
-  
-    await deleteExpenseFromIndexedDB(groupNumber!, updatedExpenses);
-  };
-  
 
   const handleExpenseChange = (e: ChangeEvent<HTMLInputElement>) => {
     setExpense(parseFloat(e.target.value));
@@ -249,28 +190,6 @@ const GroupDetails: React.FC = () => {
       addParticipant.style.display = "block";
     }
   };
-
-  const showParticipants = () => {
-    const participantCard = document.getElementById("participants-card");
-    const col = document.getElementById("col-1");
-    
-    if(participantCard && col){
-
-      if(!window.matchMedia('(max-width: 768px)').matches){
-        
-        if(participantCard.classList.contains("scaleNone")){
-          col.style.height = "max-content";
-          participantCard.classList.remove("scaleNone");
-          
-        }else{          
-          col.style.height = "150%";
-          participantCard.classList.add("scaleNone");
-          
-        }
-      }
-    }
-  }
-
 
   const handleKeyPress = (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (event.key === 'Enter') {
