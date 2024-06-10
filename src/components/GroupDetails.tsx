@@ -24,6 +24,20 @@ const saveExpenseToIndexedDB = async (groupNumber: string, newExpense: Expense) 
 
         await tx.done;
         console.log('Dépense enregistrée avec succès dans IndexedDB.');
+        
+        if ('serviceWorker' in navigator) {
+          navigator.serviceWorker.ready.then(function (registration) {
+            registration.showNotification('Form Submitted', {
+              body: 'Your form has been successfully submitted!',
+              icon: '/path/to/icon.png',
+              badge: '/path/to/badge.png',
+              data: {
+                url: window.location.href,
+              },
+            });
+          });
+        }
+        
     } catch (error) {
         console.error('Erreur lors de l\'enregistrement de la dépense dans IndexedDB:', error);
     }
