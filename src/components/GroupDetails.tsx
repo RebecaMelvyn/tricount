@@ -57,6 +57,24 @@ interface Expense {
   description: string;
 }
 
+const speakText = (text: string) => {
+  const synth = window.speechSynthesis;
+  if (synth.speaking) {
+    console.error('SpeechSynthesisUtterance.speaking');
+    return;
+  }
+
+  const utterThis = new SpeechSynthesisUtterance(text);
+  utterThis.onend = () => {
+    console.log('SpeechSynthesisUtterance.onend');
+  };
+  utterThis.onerror = (event) => {
+    console.error('SpeechSynthesisUtterance.onerror', event);
+  };
+
+  synth.speak(utterThis);
+};
+
 const GroupDetails: React.FC = () => {
   const { groupNumber } = useParams<{ groupNumber: string | undefined }>();
   const [group, setGroup] = useState<Group | null>(null);
@@ -182,7 +200,7 @@ const GroupDetails: React.FC = () => {
 
   const handleSubmitExpense = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-  
+
     const newExpense: Expense = {
       payer: selectedPayer!,
       amount: expense,
@@ -194,7 +212,9 @@ const GroupDetails: React.FC = () => {
     const amountPerBeneficiary = expense / isPayerIncluded;
     setExpenses(prevExpenses => [...prevExpenses, newExpense]);
     await saveExpenseToIndexedDB(groupNumber!, newExpense);
-    console.log('Montant à rembourser par bénéficiaire:', amountPerBeneficiary);
+
+    const expenseText = `${selectedPayer} a payé ${expense} euros pour ${reason}. ${selectedBeneficiaries.length > 0 ? selectedBeneficiaries.join('et ') + ' doivent rembourser ' + amountPerBeneficiary + ' euros chacun.' : ''}`;
+    speakText(expenseText);
 
     setExpense(0);
     setSelectedPayer(undefined);
