@@ -5,9 +5,6 @@ import '../../src/css/GroupDetailCss.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTimes, faPlus } from '@fortawesome/free-solid-svg-icons'; // Import de l'icône de plus
 import Header from './Header';
-// import { notificationsService } from '../hooks/notificationsService';
-// import * as PusherPushNotifications from '@pusher/push-notifications-web';
-
 
 const saveExpenseToIndexedDB = async (groupNumber: string, newExpense: Expense) => {
     try {
@@ -45,6 +42,24 @@ interface Expense {
   description: string;
 }
 
+const speakText = (text: string) => {
+  const synth = window.speechSynthesis;
+  if (synth.speaking) {
+    console.error('SpeechSynthesisUtterance.speaking');
+    return;
+  }
+
+  const utterThis = new SpeechSynthesisUtterance(text);
+  utterThis.onend = () => {
+    console.log('SpeechSynthesisUtterance.onend');
+  };
+  utterThis.onerror = (event) => {
+    console.error('SpeechSynthesisUtterance.onerror', event);
+  };
+
+  synth.speak(utterThis);
+};
+
 const GroupDetails: React.FC = () => {
   const { groupNumber } = useParams<{ groupNumber: string | undefined }>();
   const [group, setGroup] = useState<Group | null>(null);
@@ -56,7 +71,6 @@ const GroupDetails: React.FC = () => {
   const [description, setDescription] = useState<string>('');
   const [expenses, setExpenses] = useState<Expense[]>([]);
   const [newParticipantName, setNewParticipantName] = useState('');
-  // const [beamsClient, setBeamsClient] = useState<PusherPushNotifications.Client | null>(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -73,24 +87,6 @@ const GroupDetails: React.FC = () => {
     };
 
     fetchData();
-    // const initializePusherClient = async () => {
-    //   try {
-    //     const client = await notificationsService();
-    //     if (client instanceof PusherPushNotifications.Client) {
-    //       setBeamsClient(client);
-    //       if (client) {
-    //         await client.addDeviceInterest('group_created');
-    //         console.log('Interest added for group_created');
-    //       }
-    //     } else {
-    //       console.error('Error: Expected PusherPushNotifications.Client');
-    //     }
-    //   } catch (error) {
-    //     console.error('Error initializing Pusher client:', error);
-    //   }
-    // };
-
-    // initializePusherClient();
   }, [groupNumber]);
 
   const handleExpenseChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -144,7 +140,7 @@ const GroupDetails: React.FC = () => {
 
   const handleSubmitExpense = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-  
+
     const newExpense: Expense = {
       payer: selectedPayer!,
       amount: expense,
@@ -157,26 +153,9 @@ const GroupDetails: React.FC = () => {
     setExpenses(prevExpenses => [...prevExpenses, newExpense]);
     await saveExpenseToIndexedDB(groupNumber!, newExpense);
 
-    // if (beamsClient) {
-    //   try {
-    //     await beamsClient.publishToInterests(['group_created'], {
-    //       web: {
-    //         notification: {
-    //           title: 'Nouveau groupe créé',
-    //           body: `Le groupe ${group?.name} a été créé avec succès!`
-    //         }
-    //       }
-    //     });
-    //     console.log('Notification envoyée pour le nouveau groupe');
-    //   } catch (error) {
-    //     console.error('Error sending notification:', error);
-    //   }
-    // }
-    
-    
-  
-
-    console.log('Montant à rembourser par bénéficiaire:', amountPerBeneficiary);
+    // Lecture de la dépense ajoutée
+    const expenseText = `${selectedPayer} a payé ${expense} euros pour ${reason}. ${selectedBeneficiaries.length > 0 ? selectedBeneficiaries.join(', ') + ' doivent rembourser ' + amountPerBeneficiary + ' euros chacun.' : ''}`;
+    speakText(expenseText);
 
     setExpense(0);
     setSelectedPayer(undefined);
@@ -185,8 +164,7 @@ const GroupDetails: React.FC = () => {
     setDescription('');
     setShowPopup(false);
   };
-  
-  
+
   const removeParticipant = async (participantIndex: number) => {
     if (!group) return;
 
@@ -210,16 +188,13 @@ const GroupDetails: React.FC = () => {
   const showAddParticipant = () => {
     const addParticipant = document.getElementById("addParticipant");
     if (addParticipant) {
-      
       addParticipant.style.display = "block";
     }
   };
 
   const handleKeyPress = (event: React.KeyboardEvent<HTMLInputElement>) => {
-    
     if (event.key === 'Enter') {
       addParticipant();
-      
       const buttonParticipant = document.getElementById("addParticipant");
       if (buttonParticipant) {
         buttonParticipant.style.display = "none";
@@ -235,114 +210,110 @@ const GroupDetails: React.FC = () => {
     <div>
       <Header/>
 
-  <h1>Détails du groupe {group.name}</h1>
-  <h3>Numéro du groupe {group.number}</h3>
-  <h2>Membres:         <button type="button" onClick={showAddParticipant}>
-                            <FontAwesomeIcon icon={faPlus} />
-                          </button>
-  </h2>
-  <div className="participants-card">
-
-  <ul className="participants-list">
-    {group.participants.map((participant, index) => (
-      <li className='participants' key={index}>
-        <div>
-          {participant}
-          <button type="button" className='delParticipant' onClick={() => removeParticipant(index)}>
-            <FontAwesomeIcon icon={faTimes} />
-          </button>
-        </div>
-      </li>
-    ))}
-  </ul>
-</div>
-
+      <h1>Détails du groupe {group.name}</h1>
+      <h3>Numéro du groupe {group.number}</h3>
+      <h2>Membres: <button type="button" onClick={showAddParticipant}>
+        <FontAwesomeIcon icon={faPlus} />
+      </button></h2>
+      <div className="participants-card">
+        <ul className="participants-list">
+          {group.participants.map((participant, index) => (
+            <li className='participants' key={index}>
+              <div>
+                {participant}
+                <button type="button" className='delParticipant' onClick={() => removeParticipant(index)}>
+                  <FontAwesomeIcon icon={faTimes} />
+                </button>
+              </div>
+            </li>
+          ))}
+        </ul>
+      </div>
 
       <div id='addParticipant'>
         <input
           type="text"
           value={newParticipantName}
           onChange={(e) => setNewParticipantName(e.target.value)}
-          onKeyDown={handleKeyPress} 
+          onKeyDown={handleKeyPress}
           placeholder="Nom du nouveau participant"
         />
       </div>
-        <button id='buttonHidden' type="button" onClick={addParticipant}>
-          <FontAwesomeIcon icon={faPlus} />
-        </button>
+      <button id='buttonHidden' type="button" onClick={addParticipant}>
+        <FontAwesomeIcon icon={faPlus} />
+      </button>
 
+      <h2>Dépenses:</h2>
+      <button onClick={addExpense}>Ajouter une dépense</button>
 
-        <h2>Dépenses:</h2>
-        <button onClick={addExpense}>Ajouter une dépense</button>
+      <ul className='lineDepense'>
+        {expenses.map((expense, index) => (
+          <li key={index}>
+            {expense.reason} : {expense.payer} a payé {expense.amount}€
+            {expense.beneficiaries.length > 0 &&
+              <span>, et {expense.beneficiaries.join(', ')} doivent rembourser {expense.amount / expense.beneficiaries.length}€ à {expense.payer}</span>
+            }
+          </li>
+        ))}
+      </ul>
 
-        <ul className='lineDepense'>
-          {expenses.map((expense, index) => (
-            <li  key={index}>
-              {expense.reason} : {expense.payer} a payé {expense.amount}€
-              {expense.beneficiaries.length > 0 &&
-                <span>, et {expense.beneficiaries.join(', ')} doivent rembourser {expense.amount / expense.beneficiaries.length}€ à {expense.payer}</span>
-              }
-            </li>
-          ))}
-        </ul>
+      <h2>Total des dépenses pour tout le groupe: {totalExpenses}€</h2>
 
-        <h2>Total des dépenses pour tout le groupe: {totalExpenses}€</h2>
+      <h2>Total des dépenses par utilisateur:</h2>
+      <ul>
+        {totalExpensesPerUser.map(([user, total], index) => (
+          <li key={index}>{user}: {total}€</li>
+        ))}
+      </ul>
 
-        <h2>Total des dépenses par utilisateur:</h2>
-        <ul>
-          {totalExpensesPerUser.map(([user, total], index) => (
-            <li key={index}>{user}: {total}€</li>
-          ))}
-        </ul>
-        
-        {showPopup && (
-          <div className="popup-overlay">
-            <div className="popup">
-              <span className="close" onClick={() => setShowPopup(false)}>&times;</span>
-              <form onSubmit={handleSubmitExpense}>
-                <label id='label-popup'>
-                  <input placeholder='Montant'
-                    type="number"
-                    value={expense}
-                    onChange={handleExpenseChange}
-                    required
-                  />
-                </label>
-                <label id='label-popup'>
-                  <input placeholder='Titre'
-                    type="text"
-                    value={reason}
-                    onChange={handleReasonChange}
-                    required
-                  />
-                </label>
-                <label id='label-popup'> 
-                  <select required value={selectedPayer} onChange={handlePayerChange}>
-                    <option value="">Payer par...</option>
-                    {group.participants.map((participant, index) => (
-                      <option key={index} value={participant}>{participant}</option>
-                    ))}
-                  </select>
-                </label>
-                <label>
-                  Pour qui :
+      {showPopup && (
+        <div className="popup-overlay">
+          <div className="popup">
+            <span className="close" onClick={() => setShowPopup(false)}>&times;</span>
+            <form onSubmit={handleSubmitExpense}>
+              <label id='label-popup'>
+                <input placeholder='Montant'
+                  type="number"
+                  value={expense}
+                  onChange={handleExpenseChange}
+                  required
+                />
+              </label>
+              <label id='label-popup'>
+                <input placeholder='Titre'
+                  type="text"
+                  value={reason}
+                  onChange={handleReasonChange}
+                  required
+                />
+              </label>
+              <label id='label-popup'>
+                <select required value={selectedPayer} onChange={handlePayerChange}>
+                  <option value="">Payer par...</option>
                   {group.participants.map((participant, index) => (
-                    <label id='members-list' key={index}>
-                      <input
-                        type="checkbox"
-                        value={participant}
-                        checked={selectedBeneficiaries.includes(participant)}
-                        onChange={handleBeneficiaryChange}
-                      />
-                      {participant}
-                    </label>
+                    <option key={index} value={participant}>{participant}</option>
                   ))}
-                </label>
-                <button type="submit">Ajouter</button>
-              </form>
-            </div>
+                </select>
+              </label>
+              <label>
+                Pour qui :
+                {group.participants.map((participant, index) => (
+                  <label id='members-list' key={index}>
+                    <input
+                      type="checkbox"
+                      value={participant}
+                      checked={selectedBeneficiaries.includes(participant)}
+                      onChange={handleBeneficiaryChange}
+                    />
+                    {participant}
+                  </label>
+                ))}
+              </label>
+              <button type="submit">Ajouter</button>
+            </form>
           </div>
-        )}
+        </div>
+      )}
     </div>
   );
 };
