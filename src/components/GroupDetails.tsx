@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom';
 import { openDB } from 'idb';
 import '../../src/css/GroupDetailCss.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTimes, faPlus, faEye, faEdit } from '@fortawesome/free-solid-svg-icons';
+import { faTimes, faPlus } from '@fortawesome/free-solid-svg-icons';
 import Header from './Header';
 
 const saveExpenseToIndexedDB = async (groupNumber: string, newExpense: Expense) => {
