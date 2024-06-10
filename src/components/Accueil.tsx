@@ -28,11 +28,11 @@ function PageAccueil() {
           <p>L'application Trimelcas offre une solution pratique et conviviale pour gérer les dépenses partagées au sein de groupes, facilitant ainsi la coordination et l'organisation des activités collectives.</p>
 
           <Link to="/create-group">
-            <button>Créer un groupe</button>
+            <button className='btn create'>Créer un groupe</button>
           </Link>
           <h4>OU</h4>
           <Link to="/join-group">
-            <button>Rejoindre un groupe</button>
+            <button className='btn join'>Rejoindre un groupe</button>
           </Link>
         </div>
       </div>

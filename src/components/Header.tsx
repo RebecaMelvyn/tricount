@@ -15,11 +15,10 @@ const Header = () => {
         </button>
       </Link></ul>
         <ul>
-            <h1>Trimelcas</h1>
+            <h1><Link to="/">Trimelcas</Link></h1>
         </ul>
         <ul className='nav_link'>
-          <li><Link to="/">Accueil</Link></li>
-          <li className='second_link'><Link to="/groups">Tout mes groupes</Link></li>
+          <li className='second_link'><Link to="/groups">Tous mes groupes</Link></li>
         </ul>
       </nav>
     </header>

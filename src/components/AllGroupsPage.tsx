@@ -57,12 +57,13 @@ const AllGroupsPage: React.FC = () => {
         {groups.map(group => (
           <li className='groups' key={group.number}>
             <p className='group_name'>Groupe <b>{group.name}</b></p>
-            <p>Numéro: {group.number}</p>
-            <p>Participants: {group.participants.join(', ')}</p>
+            <p>Numéro : {group.number}</p>
+            <p>Participants :</p>
+            <p>{group.participants.join(', ')}</p>
             <Link className='link_details' to={`/group-details/${group.number}`}>Détail du groupe</Link>
             <br />
             <br />
-            <button onClick={() => handleLeaveGroup(group.number)}>Supprimer le groupe</button>
+            <button className='delGroup' onClick={() => handleLeaveGroup(group.number)}>Supprimer le groupe</button>
           </li>
         ))}
       </ul>
