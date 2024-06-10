@@ -7,6 +7,7 @@ import Header from './Header';
 
 interface CreateGroupFormProps {
   redirectToGroupDetails: (groupNumber: string) => void;
+  onSubmit: (event: React.FormEvent) => void;
 }
 
 const CreateGroupForm: React.FC<CreateGroupFormProps> = ({ redirectToGroupDetails }) => {
