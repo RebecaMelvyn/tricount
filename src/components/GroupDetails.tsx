@@ -3,9 +3,8 @@ import { useParams } from 'react-router-dom';
 import { openDB } from 'idb';
 import '../../src/css/GroupDetailCss.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTimes, faPlus, faEye, faEdit } from '@fortawesome/free-solid-svg-icons';
+import { faTimes, faPlus } from '@fortawesome/free-solid-svg-icons'; 
 import Header from './Header';
-
 
 const saveExpenseToIndexedDB = async (groupNumber: string, newExpense: Expense) => {
     try {
@@ -24,20 +23,6 @@ const saveExpenseToIndexedDB = async (groupNumber: string, newExpense: Expense) 
 
         await tx.done;
         console.log('Dépense enregistrée avec succès dans IndexedDB.');
-        
-        if ('serviceWorker' in navigator) {
-          navigator.serviceWorker.ready.then(function (registration) {
-            registration.showNotification('Form Submitted', {
-              body: 'Your form has been successfully submitted!',
-              icon: '/path/to/icon.png',
-              badge: '/path/to/badge.png',
-              data: {
-                url: window.location.href,
-              },
-            });
-          });
-        }
-        
     } catch (error) {
         console.error('Erreur lors de l\'enregistrement de la dépense dans IndexedDB:', error);
     }
@@ -57,6 +42,24 @@ interface Expense {
   description: string;
 }
 
+const speakText = (text: string) => {
+  const synth = window.speechSynthesis;
+  if (synth.speaking) {
+    console.error('SpeechSynthesisUtterance.speaking');
+    return;
+  }
+
+  const utterThis = new SpeechSynthesisUtterance(text);
+  utterThis.onend = () => {
+    console.log('SpeechSynthesisUtterance.onend');
+  };
+  utterThis.onerror = (event) => {
+    console.error('SpeechSynthesisUtterance.onerror', event);
+  };
+
+  synth.speak(utterThis);
+};
+
 const GroupDetails: React.FC = () => {
   const { groupNumber } = useParams<{ groupNumber: string | undefined }>();
   const [group, setGroup] = useState<Group | null>(null);
@@ -68,33 +71,7 @@ const GroupDetails: React.FC = () => {
   const [description, setDescription] = useState<string>('');
   const [expenses, setExpenses] = useState<Expense[]>([]);
   const [newParticipantName, setNewParticipantName] = useState('');
-  
-  const deleteExpenseFromIndexedDB = async (groupNumber: string, expenses: Expense[]) => {
-    try {
-      const db = await openDB('groupDB', 1);
-      const tx = db.transaction('groups', 'readwrite');
-      const store = tx.objectStore('groups');
-  
-      const group = await store.get(groupNumber);
-      if (group) {
-        group.expenses = expenses;
-        await store.put(group); 
-      }
-  
-      await tx.done;
-      console.log('Dépense supprimée avec succès de IndexedDB.');
-    } catch (error) {
-      console.error('Erreur lors de la suppression de la dépense de IndexedDB:', error);
-    }
-  };
 
-  const removeExpense = async (index: number) => {
-    const updatedExpenses = [...expenses];
-    updatedExpenses.splice(index, 1);
-    setExpenses(updatedExpenses);
-    await deleteExpenseFromIndexedDB(groupNumber!, updatedExpenses); 
-  };
-  
   useEffect(() => {
     const fetchData = async () => {
       if (!groupNumber) return; 
@@ -111,25 +88,6 @@ const GroupDetails: React.FC = () => {
 
     fetchData();
   }, [groupNumber]);
-
-  const editExpense = async (index: number) => {
-    const editedExpense = expenses[index]; 
-
-    setExpense(editedExpense.amount);
-    setSelectedPayer(editedExpense.payer);
-    setSelectedBeneficiaries(editedExpense.beneficiaries);
-    setReason(editedExpense.reason);
-    setDescription(editedExpense.description);
-    
-    setShowPopup(true);
-  
-    const updatedExpenses = [...expenses];
-    updatedExpenses.splice(index, 1);
-    setExpenses(updatedExpenses);
-  
-    await deleteExpenseFromIndexedDB(groupNumber!, updatedExpenses);
-  };
-  
 
   const handleExpenseChange = (e: ChangeEvent<HTMLInputElement>) => {
     setExpense(parseFloat(e.target.value));
@@ -182,7 +140,7 @@ const GroupDetails: React.FC = () => {
 
   const handleSubmitExpense = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-  
+
     const newExpense: Expense = {
       payer: selectedPayer!,
       amount: expense,
@@ -194,7 +152,9 @@ const GroupDetails: React.FC = () => {
     const amountPerBeneficiary = expense / isPayerIncluded;
     setExpenses(prevExpenses => [...prevExpenses, newExpense]);
     await saveExpenseToIndexedDB(groupNumber!, newExpense);
-    console.log('Montant à rembourser par bénéficiaire:', amountPerBeneficiary);
+
+    const expenseText = `${selectedPayer} a payé ${expense} euros pour ${reason}. ${selectedBeneficiaries.length > 0 ? selectedBeneficiaries.join('et ') + ' doivent rembourser ' + amountPerBeneficiary + ' euros chacun.' : ''}`;
+    speakText(expenseText);
 
     setExpense(0);
     setSelectedPayer(undefined);
@@ -203,8 +163,7 @@ const GroupDetails: React.FC = () => {
     setDescription('');
     setShowPopup(false);
   };
-  
-  
+
   const removeParticipant = async (participantIndex: number) => {
     if (!group) return;
 
@@ -222,44 +181,19 @@ const GroupDetails: React.FC = () => {
 
     const updatedParticipants = [...group.participants, newParticipantName];
     setGroup({ ...group, participants: updatedParticipants });
-    setNewParticipantName(''); // Réinitialise le champ de saisie du nom du participant après l'ajout
+    setNewParticipantName(''); 
   };
 
   const showAddParticipant = () => {
     const addParticipant = document.getElementById("addParticipant");
     if (addParticipant) {
-      
       addParticipant.style.display = "block";
     }
   };
 
-  const showParticipants = () => {
-    const participantCard = document.getElementById("participants-card");
-    const col = document.getElementById("col-1");
-    
-    if(participantCard && col){
-
-      if(!window.matchMedia('(max-width: 768px)').matches){
-        
-        if(participantCard.classList.contains("scaleNone")){
-          col.style.height = "max-content";
-          participantCard.classList.remove("scaleNone");
-          
-        }else{          
-          col.style.height = "150%";
-          participantCard.classList.add("scaleNone");
-          
-        }
-      }
-    }
-  }
-
-
   const handleKeyPress = (event: React.KeyboardEvent<HTMLInputElement>) => {
-    
     if (event.key === 'Enter') {
       addParticipant();
-      
       const buttonParticipant = document.getElementById("addParticipant");
       if (buttonParticipant) {
         buttonParticipant.style.display = "none";
@@ -277,131 +211,108 @@ const GroupDetails: React.FC = () => {
 
       <h1>Détails du groupe {group.name}</h1>
       <h3>Numéro du groupe {group.number}</h3>
-
-      <div id='contain_col'>
-
-        <div id='col-1'>
-          <h2>Membres :          
-            <button type="button" id='showParticipants' onClick={showParticipants}>
-              <FontAwesomeIcon icon={faEye} />
-            </button>
-          </h2>
-          <div id="participants-card" className='scaleNone'>
-          <button type="button" onClick={showAddParticipant}>
-            <FontAwesomeIcon icon={faPlus} />
-          </button>
-            <ul className="participants-list">
-              {group.participants.map((participant, index) => (
-                <li className='participants' key={index}>
-                  <div>
-                    {participant}
-                    <button type="button" className='delParticipant' onClick={() => removeParticipant(index)}>
-                      <FontAwesomeIcon icon={faTimes} />
-                    </button>
-                  </div>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          <div id='addParticipant'>
-            <input
-              type="text"
-              value={newParticipantName}
-              onChange={(e) => setNewParticipantName(e.target.value)}
-              onKeyDown={handleKeyPress} 
-              placeholder="Nom du nouveau participant"
-            />
-          </div>
-          <button id='buttonHidden' type="button" onClick={addParticipant}>
-            <FontAwesomeIcon icon={faPlus} />
-          </button>
-
-        </div>
-
-        <div id='col-2'>
-
-          <h2>Dépenses:</h2>
-          <button onClick={addExpense}>Ajouter une dépense</button>
-
-          <ul className='lineDepense'>
-            {expenses.map((expense, index) => (
-              <li  key={index}>
-               {expense.reason} : {expense.payer} a payé {expense.amount}€
-              {expense.beneficiaries.length > 0 && (
-                <span>, et {expense.beneficiaries.join(', ')} doivent rembourser {expense.amount / expense.beneficiaries.length}€ à {expense.payer}</span>
-              )}
-              <button className='editExpense' onClick={() => editExpense(index)}>
-                <FontAwesomeIcon icon={faEdit} />
-              </button> 
-              <button className='delExpense' onClick={() => removeExpense(index)}>
-                <FontAwesomeIcon icon={faTimes} />  
-              </button>
-              </li>
-            ))}
-          </ul>
-
-          <h2>Total des dépenses pour tout le groupe: {totalExpenses}€</h2>
-
-          <h2>Total des dépenses par utilisateur:</h2>
-          <ul>
-            {totalExpensesPerUser.map(([user, total], index) => (
-              <li key={index}>{user}: {total}€</li>
-            ))}
-          </ul>
-          
-          {showPopup && (
-            <div className="popup-overlay">
-              <div className="popup">
-                <span className="close" onClick={() => setShowPopup(false)}>&times;</span>
-                <form onSubmit={handleSubmitExpense}>
-                  <label id='label-popup'>
-                    <input placeholder='Montant'
-                      type="number"
-                      value={expense}
-                      onChange={handleExpenseChange}
-                      required
-                    />
-                  </label>
-                  <label id='label-popup'>
-                    <input placeholder='Titre'
-                      type="text"
-                      value={reason}
-                      onChange={handleReasonChange}
-                      required
-                    />
-                  </label>
-                  <label id='label-popup'> 
-                    <select required value={selectedPayer} onChange={handlePayerChange}>
-                      <option value="">Payer par...</option>
-                      {group.participants.map((participant, index) => (
-                        <option key={index} value={participant}>{participant}</option>
-                      ))}
-                    </select>
-                  </label>
-                  <label>
-                    Pour qui :
-                    {group.participants.map((participant, index) => (
-                      <label id='members-list' key={index}>
-                        <input
-                          type="checkbox"
-                          value={participant}
-                          checked={selectedBeneficiaries.includes(participant)}
-                          onChange={handleBeneficiaryChange}
-                        />
-                        {participant}
-                      </label>
-                    ))}
-                  </label>
-                  <button type="submit">Ajouter</button>
-                </form>
+      <h2>Membres: <button type="button" onClick={showAddParticipant}>
+        <FontAwesomeIcon icon={faPlus} />
+      </button></h2>
+      <div className="participants-card">
+        <ul className="participants-list">
+          {group.participants.map((participant, index) => (
+            <li className='participants' key={index}>
+              <div>
+                {participant}
+                <button type="button" className='delParticipant' onClick={() => removeParticipant(index)}>
+                  <FontAwesomeIcon icon={faTimes} />
+                </button>
               </div>
-            </div>
-          )}
-        </div>
+            </li>
+          ))}
+        </ul>
       </div>
-        
 
+      <div id='addParticipant'>
+        <input
+          type="text"
+          value={newParticipantName}
+          onChange={(e) => setNewParticipantName(e.target.value)}
+          onKeyDown={handleKeyPress}
+          placeholder="Nom du nouveau participant"
+        />
+      </div>
+      <button id='buttonHidden' type="button" onClick={addParticipant}>
+        <FontAwesomeIcon icon={faPlus} />
+      </button>
+
+      <h2>Dépenses:</h2>
+      <button onClick={addExpense}>Ajouter une dépense</button>
+
+      <ul className='lineDepense'>
+        {expenses.map((expense, index) => (
+          <li key={index}>
+            {expense.reason} : {expense.payer} a payé {expense.amount}€
+            {expense.beneficiaries.length > 0 &&
+              <span>, et {expense.beneficiaries.join(', ')} doivent rembourser {expense.amount / expense.beneficiaries.length}€ à {expense.payer}</span>
+            }
+          </li>
+        ))}
+      </ul>
+
+      <h2>Total des dépenses pour tout le groupe: {totalExpenses}€</h2>
+
+      <h2>Total des dépenses par utilisateur:</h2>
+      <ul>
+        {totalExpensesPerUser.map(([user, total], index) => (
+          <li key={index}>{user}: {total}€</li>
+        ))}
+      </ul>
+
+      {showPopup && (
+        <div className="popup-overlay">
+          <div className="popup">
+            <span className="close" onClick={() => setShowPopup(false)}>&times;</span>
+            <form onSubmit={handleSubmitExpense}>
+              <label id='label-popup'>
+                <input placeholder='Montant'
+                  type="number"
+                  value={expense}
+                  onChange={handleExpenseChange}
+                  required
+                />
+              </label>
+              <label id='label-popup'>
+                <input placeholder='Titre'
+                  type="text"
+                  value={reason}
+                  onChange={handleReasonChange}
+                  required
+                />
+              </label>
+              <label id='label-popup'>
+                <select required value={selectedPayer} onChange={handlePayerChange}>
+                  <option value="">Payer par...</option>
+                  {group.participants.map((participant, index) => (
+                    <option key={index} value={participant}>{participant}</option>
+                  ))}
+                </select>
+              </label>
+              <label>
+                Pour qui :
+                {group.participants.map((participant, index) => (
+                  <label id='members-list' key={index}>
+                    <input
+                      type="checkbox"
+                      value={participant}
+                      checked={selectedBeneficiaries.includes(participant)}
+                      onChange={handleBeneficiaryChange}
+                    />
+                    {participant}
+                  </label>
+                ))}
+              </label>
+              <button type="submit">Ajouter</button>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
