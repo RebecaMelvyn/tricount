@@ -154,7 +154,7 @@ const GroupDetails: React.FC = () => {
     await saveExpenseToIndexedDB(groupNumber!, newExpense);
 
     // Lecture de la dépense ajoutée
-    const expenseText = `${selectedPayer} a payé ${expense} euros pour ${reason}. ${selectedBeneficiaries.length > 0 ? selectedBeneficiaries.join(', ') + ' doivent rembourser ' + amountPerBeneficiary + ' euros chacun.' : ''}`;
+    const expenseText = `${selectedPayer} a payé ${expense} euros pour ${reason}. ${selectedBeneficiaries.length > 0 ? selectedBeneficiaries.join('et ') + ' doivent rembourser ' + amountPerBeneficiary + ' euros chacun.' : ''}`;
     speakText(expenseText);
 
     setExpense(0);
