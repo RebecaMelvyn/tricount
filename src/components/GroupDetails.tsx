@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom';
 import { openDB } from 'idb';
 import '../../src/css/GroupDetailCss.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTimes, faPlus } from '@fortawesome/free-solid-svg-icons'; // Import de l'icône de plus
+import { faTimes, faPlus } from '@fortawesome/free-solid-svg-icons'; 
 import Header from './Header';
 
 const saveExpenseToIndexedDB = async (groupNumber: string, newExpense: Expense) => {
@@ -153,7 +153,6 @@ const GroupDetails: React.FC = () => {
     setExpenses(prevExpenses => [...prevExpenses, newExpense]);
     await saveExpenseToIndexedDB(groupNumber!, newExpense);
 
-    // Lecture de la dépense ajoutée
     const expenseText = `${selectedPayer} a payé ${expense} euros pour ${reason}. ${selectedBeneficiaries.length > 0 ? selectedBeneficiaries.join('et ') + ' doivent rembourser ' + amountPerBeneficiary + ' euros chacun.' : ''}`;
     speakText(expenseText);
 
@@ -182,7 +181,7 @@ const GroupDetails: React.FC = () => {
 
     const updatedParticipants = [...group.participants, newParticipantName];
     setGroup({ ...group, participants: updatedParticipants });
-    setNewParticipantName(''); // Réinitialise le champ de saisie du nom du participant après l'ajout
+    setNewParticipantName(''); 
   };
 
   const showAddParticipant = () => {
